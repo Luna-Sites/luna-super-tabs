@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useMemo } from "react";
 import cx from "classnames";
 import { compose } from "redux";
 import { withRouter } from "react-router";
-import { StyleWrapperView } from "@eeacms/volto-block-style/StyleWrapper";
 import { TABS_BLOCK } from "luna-super-tabs/constants";
 import {
   getVariation,
@@ -91,41 +90,27 @@ const View = (props) => {
   }, []);
 
   return (
-    <StyleWrapperView
-      {...props}
-      data={data}
-      styleData={data.styles || {}}
-      styled={true}
+    <div
+      className={cx("tabs-block", variation, theme, verticalAlign)}
+      id={props.id}
+      ref={view}
     >
-      <div
-        className={cx("tabs-block", variation, theme, verticalAlign)}
-        id={props.id}
-        ref={view}
-      >
-        <StyleWrapperView
-          {...props}
-          data={tabData}
-          styleData={tabData.styles || {}}
-          styled={true}
-        >
-          <TabsView
-            {...props}
-            tabIndex={0}
-            activeTab={activeTab}
-            activeTabIndex={activeTabIndex}
-            node={view}
-            metadata={metadata}
-            parentRef={view}
-            tabs={tabs}
-            tabData={tabData}
-            tabsData={tabsData}
-            tabsList={tabsList}
-            uiContainer={uiContainer}
-            setActiveTab={handleActiveTabChange}
-          />
-        </StyleWrapperView>
-      </div>
-    </StyleWrapperView>
+      <TabsView
+        {...props}
+        tabIndex={0}
+        activeTab={activeTab}
+        activeTabIndex={activeTabIndex}
+        node={view}
+        metadata={metadata}
+        parentRef={view}
+        tabs={tabs}
+        tabData={tabData}
+        tabsData={tabsData}
+        tabsList={tabsList}
+        uiContainer={uiContainer}
+        setActiveTab={handleActiveTabChange}
+      />
+    </div>
   );
 };
 

@@ -10,8 +10,6 @@ import {
 import { getBlocksLayoutFieldname } from "@plone/volto/helpers";
 import { TABS_BLOCK } from "luna-super-tabs/constants";
 import { empty, emptyTab } from "luna-super-tabs/helpers";
-import { StyleWrapperView } from "@eeacms/volto-block-style/StyleWrapper";
-import { BlockStyleWrapperEdit } from "@eeacms/volto-block-style/BlockStyleWrapper";
 import { getVariation } from "luna-super-tabs/helpers";
 import { DefaultEdit } from "./variations/default";
 import { useIntl } from "react-intl";
@@ -158,106 +156,97 @@ const Edit = (props) => {
 
   return (
     <fieldset>
-      <BlockStyleWrapperEdit {...props}>
-        <legend
-          onClick={() => {
-            setActiveBlock(null);
-            props.setSidebarTab(1);
-          }}
-          aria-hidden="true"
-        >
-          Tabs
-        </legend>
-        <div
-          className={cx("tabs-block edit", theme, verticalAlign, variation)}
-          ref={view}
-          role="presentation"
-          onKeyDown={(e) => {
-            handleKeyDown(e, props.index, props.block, props.blockNode.current);
-          }}
-          // The tabIndex is required for the keyboard navigation
-          /* eslint-disable jsx-a11y/no-noninteractive-tabindex */
-          tabIndex={-1}
-        >
-          <StyleWrapperView
-            {...props}
-            data={tabData}
-            styleData={tabData.styles || {}}
-            styled={true}
-          >
-            <TabsEdit
-              {...props}
-              schema={schemaObject}
-              activeBlock={activeBlock}
-              activeTab={activeTab}
-              activeTabIndex={activeTabIndex}
-              editingTab={editingTab}
-              empty={empty}
-              emptyTab={emptyTab}
-              metadata={props.metadata || props.properties}
-              multiSelected={multiSelected}
-              tabs={tabs}
-              tabData={tabData}
-              tabsData={tabsData}
-              tabsList={tabsList}
-              node={view}
-              onChangeTabData={onChangeTabData}
-              onSelectBlock={onSelectBlock}
-              setActiveBlock={setActiveBlock}
-              setActiveTab={setActiveTab}
-              setEditingTab={setEditingTab}
-            />
-          </StyleWrapperView>
+      <legend
+        onClick={() => {
+          setActiveBlock(null);
+          props.setSidebarTab(1);
+        }}
+        aria-hidden="true"
+      >
+        Tabs
+      </legend>
+      <div
+        className={cx("tabs-block edit", theme, verticalAlign, variation)}
+        ref={view}
+        role="presentation"
+        onKeyDown={(e) => {
+          handleKeyDown(e, props.index, props.block, props.blockNode.current);
+        }}
+        // The tabIndex is required for the keyboard navigation
+        /* eslint-disable jsx-a11y/no-noninteractive-tabindex */
+        tabIndex={-1}
+      >
+        <TabsEdit
+          {...props}
+          schema={schemaObject}
+          activeBlock={activeBlock}
+          activeTab={activeTab}
+          activeTabIndex={activeTabIndex}
+          editingTab={editingTab}
+          empty={empty}
+          emptyTab={emptyTab}
+          metadata={props.metadata || props.properties}
+          multiSelected={multiSelected}
+          tabs={tabs}
+          tabData={tabData}
+          tabsData={tabsData}
+          tabsList={tabsList}
+          node={view}
+          onChangeTabData={onChangeTabData}
+          onSelectBlock={onSelectBlock}
+          setActiveBlock={setActiveBlock}
+          setActiveTab={setActiveTab}
+          setEditingTab={setEditingTab}
+        />
 
-          {props.selected ? (
-            <BlocksToolbar
-              formData={tabData}
-              selectedBlock={activeTab}
-              selectedBlocks={multiSelected}
-              onChangeBlocks={(newBlockData) => {
-                onChangeBlock(block, {
-                  ...data,
-                  data: {
-                    ...tabsData,
-                    blocks: {
-                      ...tabsData.blocks,
-                      [activeTab]: {
-                        ...tabData,
-                        ...newBlockData,
-                      },
+        {props.selected ? (
+          <BlocksToolbar
+            formData={tabData}
+            selectedBlock={activeTab}
+            selectedBlocks={multiSelected}
+            onChangeBlocks={(newBlockData) => {
+              onChangeBlock(block, {
+                ...data,
+                data: {
+                  ...tabsData,
+                  blocks: {
+                    ...tabsData.blocks,
+                    [activeTab]: {
+                      ...tabData,
+                      ...newBlockData,
                     },
                   },
+                },
+              });
+            }}
+            onSetSelectedBlocks={(blockIds) => {
+              setMultiSelected(blockIds);
+            }}
+            onSelectBlock={onSelectBlock}
+          />
+        ) : (
+          ""
+        )}
+        {!data?.readOnlySettings && !activeBlock ? (
+          <SidebarPortal selected={props.selected}>
+            <BlockDataForm
+              block={block}
+              schema={schemaObject}
+              title={schemaObject.title}
+              onChangeBlock={onChangeBlock}
+              onChangeField={(id, value) => {
+                onChangeBlock(block, {
+                  ...data,
+                  [id]: value,
                 });
               }}
-              onSetSelectedBlocks={(blockIds) => {
-                setMultiSelected(blockIds);
-              }}
-              onSelectBlock={onSelectBlock}
+              formData={data}
             />
-          ) : (
-            ""
-          )}
-          {!data?.readOnlySettings && !activeBlock ? (
-            <SidebarPortal selected={props.selected}>
-              <BlockDataForm
-                block={block}
-                schema={schemaObject}
-                title={schemaObject.title}
-                onChangeBlock={onChangeBlock}
-                onChangeField={(id, value) => {
-                  onChangeBlock(block, {
-                    ...data,
-                    [id]: value,
-                  });
-                }}
-                formData={data}
-              />
-            </SidebarPortal>
-          ) : (
-            ""
-          )}
-        </div>
-      </BlockStyleWrapperEdit>
+          </SidebarPortal>
+        ) : (
+          ""
+        )}
+      </div>
     </fieldset>
   );
 };
