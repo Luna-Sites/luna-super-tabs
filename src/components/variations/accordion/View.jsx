@@ -1,7 +1,6 @@
 import React, { useLayoutEffect } from "react";
-import { compose } from "redux";
-import { withRouter } from "react-router";
-import { withResizeDetector } from "react-resize-detector";
+import { useHistory, useLocation } from "react-router";
+import { useResizeDetector } from "react-resize-detector";
 import cx from "classnames";
 import noop from "lodash/noop";
 
@@ -36,9 +35,12 @@ const View = (props) => {
     tabs = {},
     activeTabIndex = 0,
     setActiveTab = noop,
-    width,
     id,
   } = props;
+  
+  const { width, ref } = useResizeDetector();
+  const history = useHistory();
+  const location = useLocation();
 
   const variation = getVariation(data);
 
@@ -154,6 +156,7 @@ const View = (props) => {
 
   return (
     <div
+      ref={ref}
       className={"tab-accordion-container"}
       onKeyDown={(e) => {
         if (e.key === "Enter") {
@@ -175,7 +178,7 @@ const View = (props) => {
           const { blockWidth } = tabsContainer.current?.state || {};
           const tabWithHash = getParentTabFromHash(
             data,
-            props.location.hash.substring(1)
+            location.hash.substring(1)
           );
           if (tabWithHash === tabsList[activeTabIndex] && !hashTab)
             setHashTab(true);
@@ -209,8 +212,4 @@ const View = (props) => {
   );
 };
 
-export default compose(
-  withScrollToTarget,
-  withResizeDetector,
-  withRouter
-)(View);
+export default withScrollToTarget(View);

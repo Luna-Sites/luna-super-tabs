@@ -11,6 +11,61 @@
     display: none !important;
   }
 
+  .ui.secondary.pointing.menu {
+    border-bottom: 4px solid
+      color-mix(in srgb, var(--lunasites-primary-color, #004b7f) 30%, white) !important;
+
+    .active.item {
+      background-color: transparent !important;
+      box-shadow: none !important;
+      border-color: var(--lunasites-primary-color, #004b7f) !important;
+      font-weight: normal !important;
+      color: var(--lunasites-text-color, #252525) !important;
+    }
+  }
+
+  // Vertical tabs styling
+  .ui.fluid.pointing.vertical.menu {
+    &.tabs-secondary-variant.border-right {
+      .active.item {
+        background-color: var(--lunasites-primary-color, #004b7f) !important;
+        // Use light-dark() to automatically choose white or black based on primary color
+        color: light-dark(black, white) !important;
+        border-color: var(--lunasites-primary-color, #004b7f) !important;
+
+        .menu-item-count,
+        .menu-item-text {
+          color: inherit !important;
+        }
+
+        // Force high contrast text color calculation
+        @supports (color: color-contrast(red vs white, black)) {
+          color: color-contrast(
+            var(--lunasites-primary-color) vs white,
+            black
+          ) !important;
+        }
+
+        // Fallback: if primary is dark, use white text; if light, use black
+        @media (prefers-color-scheme: light) {
+          color: white !important;
+        }
+        @media (prefers-color-scheme: dark) {
+          color: black !important;
+        }
+      }
+
+      .item:not(.active) {
+        color: var(--lunasites-text-color, #252525) !important;
+
+        .menu-item-count,
+        .menu-item-text {
+          color: inherit !important;
+        }
+      }
+    }
+  }
+
   .remove-menu {
     padding-right: 0 !important;
     padding-bottom: 0 !important;
@@ -227,6 +282,24 @@
         background: inherit;
         font-family: inherit;
         font-weight: inherit;
+      }
+    }
+  }
+
+  // Vertical alignment for grid-based tabs
+  .ui.grid {
+    align-items: center;
+
+    .column {
+      display: flex;
+      align-items: center;
+
+      &.three.wide {
+        justify-content: center;
+      }
+
+      &.nine.wide {
+        justify-content: flex-start;
       }
     }
   }
